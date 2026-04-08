@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\OrderCreated;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -16,35 +17,41 @@ class OrderController extends Controller
         return response()->json($orders, 200);
     }
 
-    public function store(Request $request,$id)
-    {
-        $request->validate([
-            'products' => 'required|array',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-        ]);
-
-        $order = Order::create([
-        'user_id' => $id,
-            'total_price' => 0
-        ]);
-
-        $total = 0;
-        foreach($request->products as $item){
-            $product = Product::find($item['product_id']);
-            $order->products()->attach($product->id, [
-                'quantity' => $item['quantity']
-            ]);
-            $total += $product->price * $item['quantity'];
-        }
-
-        $order->update(['total_price' => $total]);
-
-        return response()->json([
-            'message' => 'Order created successfully',
-            'order' => $order->load('products')
-        ], 201);
+public function store(Request $request, $id)
+{
+    $request->validate([
+        'products' => 'required|array',
+        'products.*.product_id' => 'required|exists:products,id',
+        'products.*.quantity' => 'required|integer|min:1',
+    ]);
+    
+    $total = 0;
+    foreach ($request->products as $item) {
+        $product = Product::find($item['product_id']);
+        $total += $product->price * $item['quantity'];
     }
+        
+    $order = Order::create([
+        'user_id' => $id,
+        'totalPrice'=> $total
+    ]);
+    foreach ($request->products as $item) {
+        $order->products()->attach($item['product_id'], [
+            'quantity' => $item['quantity']
+        ]);
+    }
+    
+    $user = User::find($id);
+
+    if ($user) {
+        $user->notify(new OrderCreated($order));
+    }
+
+    return response()->json([
+        'message' => 'Order created successfully',
+        'order' => $order->load('products')
+    ], 201);
+}
 
     public function show($id)
     {

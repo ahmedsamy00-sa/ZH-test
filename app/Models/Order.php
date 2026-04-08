@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Order extends Model
 {
+    use Notifiable;
     protected $fillable = [
-        'user_id'
+        'user_id',
+        'totalPrice'
     ];
 
     public function user(){
@@ -16,4 +19,7 @@ class Order extends Model
     public function products(){
     return $this->belongsToMany(Product::class, 'order_items')->withPivot('quantity');
 }
+    public function delivery(){
+        return $this->hasOne(Delivery::class);
+    }
 }
