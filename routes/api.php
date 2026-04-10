@@ -18,7 +18,9 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
 //trader
 Route::get('trader/',[TraderController::class,'index']);
-Route::get('deliver/trader/{id}',[TraderController::class,'getAllStoreDeliveries']);
+Route::get('trader/deliveries/{id}',[TraderController::class,'getAllStoreDeliveries']);
+Route::get('trader/orders/{id}',[TraderController::class,'getAllStoreOrders']);
+Route::get('trader/products/{id}',[TraderController::class,'getAllStoreOrders']);
 Route::post('trader/add/',[TraderController::class,'addTrader']);
 Route::post('trader/upload/',[TraderController::class,'addProductForTrader']);
 
@@ -61,6 +63,8 @@ Route::post('verify/{id}',[UserController::class,'verify']);
 Route::post('register',[UserController::class,'register']);
 Route::post('login',[UserController::class,'login']);
 Route::get('/',[UserController::class, 'index']);
+Route::get('user/orders',[UserController::class, 'getUserOrders']);
+Route::get('/user/deliveries',[UserController::class, 'getUserDeliveries']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();

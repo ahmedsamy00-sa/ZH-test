@@ -31,14 +31,7 @@ class UserController extends Controller
         $deliveries = Delivery::where('user_id',$id)->get();
         return response()->json($deliveries, 200);
     }
-    public function getAllTraders(){
-        $Traders = Trader::all();
-        return response()->json($Traders, 200);
-    }
-    public function getAllProducts(){
-        $Product = Product::all();
-        return response()->json($Product, 200);
-    }
+
 
     public function register(RegisterRequest $request)
     {
