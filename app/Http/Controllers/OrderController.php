@@ -26,14 +26,18 @@ public function store(Request $request, $id)
         'trader_id'=>'required|exists:traders,id'
     ]);
     
+    
     $total = 0;
     foreach ($request->products as $item) {
         $product = Product::find($item['product_id']);
         $total += $product->price * $item['quantity'];
     }
-        
+    
+    $limit = 0;
+    $limit++;
     $order = Order::create([
         'user_id' => $id,
+        'limit'=>$limit,
         'totalPrice'=> $total,
         'trader_id'=>$request->trader_id
     ]);

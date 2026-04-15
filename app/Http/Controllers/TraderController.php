@@ -48,7 +48,8 @@ class TraderController extends Controller
         $request->validate([
         'name' => 'required|string|max:20',
         'desc' => 'required|string',
-        'price' => 'required|numeric|min:0', 
+        'price' => 'required|numeric|min:0',
+        'stoke'=> 'required|numeric|min:0',
         'category_id' => 'required|exists:categories,id',
         'trader_id'=>'required|exists:traders,id'
     ]);
@@ -56,7 +57,8 @@ class TraderController extends Controller
     $product = Product::create([
         'name' => $request->name,
         'desc' => $request->desc,
-        'price' => $request->price,      
+        'price' => $request->price,
+        'stoke'=> $request->stoke,
         'category_id' => $request->category_id,
         'trader_id'=> $request->trader_id
     ]); 

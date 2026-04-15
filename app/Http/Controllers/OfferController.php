@@ -16,39 +16,41 @@ class OfferController extends Controller
     }
 
 
-    public function store(Request $request, $id)
-    {
-        $trader = Trader::findOrFail($id);
-        $request->validate([
-            'name'=> 'required|string',
-            'desc'=>'string',
-            'discount'=>'numeric|required|min:0|max:100'
-        ]);
+public function store(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'desc' => 'nullable|string',
+        'discount' => 'required|numeric|min:0|max:100',
+    ]);
 
-        $offer = Offer::create([
-            'name'=>$request->name,
-            'desc'=>$request->desc,
-            'trader_id'=>$id,
-            'discount'=>$request->discount . '%'
-        ]);
+    $product = Product::findOrFail($id);
 
-        $products = Product::where('trader_id', $id)->get();
-        foreach($products as $product){
-            $originalPrice = $product->price;
-            $discountValue = ($originalPrice * $request->discount) / 100;
-            $finalPrice = $originalPrice - $discountValue;
-            $result[] = [
-                'product_name' => $product->name,
-                'original_price' => $originalPrice,
-                'discount' => $request->discount . '%',
-                'final_price' => $finalPrice
-            ];
-        }
-        return response()->json([
-            'msg'=>'offer added',
-            'offer'=>$offer,
-            'discounted products'=>$result
-        ], 200);
+    // create offer
+    $offer = Offer::create([
+        'name' => $request->name,
+        'desc' => $request->desc,
+        'product_id' => $product->id,
+        'discount' => $request->discount,
+        'limit' => 10,
+    ]);
+
+    $originalPrice = $product->price;
+    $discountValue = ($originalPrice * $request->discount) / 100;
+    $finalPrice = $originalPrice - $discountValue;
+
+    $result = [
+        'product_name' => $product->name,
+        'original_price' => $originalPrice,
+        'discount' => $request->discount . '%',
+        'final_price' => $finalPrice,
+    ];
+
+    return response()->json([
+        'message' => 'Offer added successfully',
+        'offer' => $offer,
+        'discounted_product' => $result
+    ], 201);
 }
 
 

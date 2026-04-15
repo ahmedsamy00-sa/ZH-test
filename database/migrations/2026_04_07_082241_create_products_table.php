@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('desc')->nullable();
             $table->integer('price');
+            $table->integer('stoke');
             $table->foreignId('trader_id')->nullable()->constrained('traders')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->timestamps();

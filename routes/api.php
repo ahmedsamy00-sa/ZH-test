@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OrderController;
@@ -11,6 +16,32 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TraderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+//contact
+Route::get('contact/',[ContactController::class,'index']);
+Route::post('contact/add/{id}',[ContactController::class,'store']);
+
+//banner
+Route::get('banner/',[BannerController::class,'index']);
+Route::post('banner/add/{id}',[BannerController::class,'store']);
+
+//Coupon
+Route::get('coupon/',[CouponController::class,'index']);
+Route::post('coupon/create/{id}',[CouponController::class,'store']);
+
+
+//conversation
+Route::get('conv/',[ConversationController::class,'index']);
+Route::post('conv/create/{id}',[ConversationController::class,'store']);
+
+
+//messages
+Route::get('message',[MessagesController::class,'index']);
+Route::get('message/{id}',[MessagesController::class,'show']);
+Route::post('message/add/{id}',[MessagesController::class,'store']);
+
+
 
 //admin
 Route::middleware(['auth:sanctum'])->group(function(){
@@ -58,8 +89,9 @@ Route::post('order/create/{id}',[OrderController::class,'store']);
 
 //product Routes
 Route::get('product/',[ProductController::class,'index']);
-Route::post('product/create',[ProductController::class,'store']);
 Route::get('product/{id}',[ProductController::class,'show']);
+Route::post('product/create',[ProductController::class,'store']);
+
 
 
 //user Routes

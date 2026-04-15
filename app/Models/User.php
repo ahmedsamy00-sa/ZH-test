@@ -43,6 +43,12 @@ class User extends Authenticatable
     public function order(){
         return $this->hasMany(Order::class);
     }
+    public function message(){
+        return $this->hasMany(Message::class);
+    }
+    public function contact(){
+        return $this->hasMany(Contact::class);
+    }
 
     protected function casts(): array
     {
